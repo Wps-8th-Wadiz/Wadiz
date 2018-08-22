@@ -86,7 +86,6 @@ class ProductFundingOrderSerializer(serializers.ModelSerializer):
 
 
 class RewardFundingSerializer(serializers.ModelSerializer):
-
     product = ProductFundingOrderSerializer()
 
     class Meta:
@@ -146,13 +145,38 @@ class ProductFundingSerializer(RewardSerializer):
         )
 
 
-class ProductLikeCreateSerializer(ProductSerializer):
-    class Meta(ProductSerializer.Meta):
+class ProductLikeCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductLike
+
         fields = (
-            'pk',
+            'product',
+            'user',
             'product_name',
             'product_interested_count',
         )
+
+    def create(self, validated_data):
+
+        product = Product.objects.get(pk=validated_data['product'].pk)
+
+        user = User.objects.get(pk=validated_data['user'].pk)
+
+        try:
+            if ProductLike.objects.filter(user=user, product=product).exists():
+                product_like = ProductLike.objects.create(
+                    user=user,
+                    product=product,
+                )
+
+                print('만들어짐')
+                product.product_interested_count += 1
+                product.save()
+
+                return product_like
+
+        except ValueError:
+            print('이미 좋아요 되어있습니다.')
 
 
 class FundingOrderCreateSerializer(serializers.ModelSerializer):
@@ -169,21 +193,25 @@ class FundingOrderCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         reward = Reward.objects.get(pk=validated_data['reward'].pk)
 
-        print('리워드 판매 카운트 :', reward.reward_sold_count)
-        print('리워드 토탈 카운트 :', reward.reward_total_count)
+        remain = reward.reward_total_count - reward.reward_sold_count
 
-        if reward.reward_total_count > reward.reward_sold_count:
-            order = Funding.objects.create(
-                user=validated_data['user'],
-                reward=validated_data['reward'],
-                order=validated_data['order'],
-                reward_amount=validated_data['reward_amount']
-            )
+        request_amount = validated_data['reward_amount']
 
-            reward.reward_sold_count += 1
-            reward.save()
+        try:
+            if remain - request_amount > 0:
+                order = Funding.objects.create(
+                    user=validated_data['user'],
+                    reward=validated_data['reward'],
+                    order=validated_data['order'],
+                    reward_amount=validated_data['reward_amount']
+                )
 
-        return order
+                reward.reward_sold_count += request_amount
+                reward.save()
+
+                return order
+        except ValueError:
+            print('수량이 초과 되었습니다.')
 
     def update(self, instance, validated_data):
         pass

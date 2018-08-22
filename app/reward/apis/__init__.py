@@ -41,7 +41,7 @@ class ProductCategoryList(generics.ListAPIView):
 # 좋아하는 Product 리스트를 요청한다.
 class ProductLikeList(generics.ListAPIView):
     queryset = ProductLike.objects.all()
-    serializer_class = ProductLikeSerializer
+    serializer_class = ProductLikeCreateSerializer
 
 
 # 펀딩한 리워드 정보를 요청한다. (장바구니)
@@ -97,49 +97,62 @@ class FundingOrderCreate(generics.ListCreateAPIView):
     serializer_class = FundingOrderCreateSerializer
 
 
-
 class ProductLikeCreate(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     pagination_class = ProductListPagination
-    serializer_class = ProductSerializer
+    serializer_class = ProductLikeCreateSerializer
 
-    def get_serializer_class(self):
-        serializer_class = self.serializer_class
 
-        if self.request.method == 'PATCH':
-            serializer_class = ProductLikeCreateSerializer
+class ProductLikeDelete(generics.DestroyAPIView):
+    queryset = ProductLike.objects.all()
+    serializer_class = ProductLikeSerializer
 
-            return serializer_class
+    def delete(self, request, *args, **kwargs):
 
-        return serializer_class
+        product = Product.objects.get(pk=self.request.data['product'])
 
-    def patch(self, request, *args, **kwargs):
-        product_pk = self.request.data.get('pk')
+        product.product_interested_count -= 1
+        print(f'{product.pk}가 삭제되었습니다.')
+        # print(self.request.data['product'])
+        return self.destroy(request, *args, **kwargs)
 
-        user = User.objects.get(username=request.user)
+    # def get_serializer_class(self):
+    #     serializer_class = self.serializer_class
+    #
+    #     if self.request.method == 'PATCH':
+    #         serializer_class = ProductLikeCreateSerializer
+    #
+    #         return serializer_class
+    #
+    #     return serializer_class
 
-        product = Product.objects.get(pk=product_pk)
-
-        # 이미 좋아요를 한기록이 있으면 좋아요 삭제 + DB 에서 좋아요 갯수감소
-        if ProductLike.objects.filter(user=user).exists():
-
-            product.product_interested_count -= 1
-
-            ProductLike.objects.filter(user=user).delete()
-
-            product.save()
-
-        # 좋아요 기록이 없으면 좋아요 만들고 DB 에서 좋아요 갯수 증가
-        else:
-            ProductLike.objects.create(
-                user=user,
-                product=product,
-            )
-
-            product.product_interested_count += 1
-
-            product.save()
-
-        serializer = self.get_serializer_class()(product)
-
-        return Response(serializer.data)
+    # def patch(self, request, *args, **kwargs):
+    #     product_pk = self.request.data.get('pk')
+    #
+    #     user = User.objects.get(username=request.user)
+    #
+    #     product = Product.objects.get(pk=product_pk)
+    #
+    #     # 이미 좋아요를 한기록이 있으면 좋아요 삭제 + DB 에서 좋아요 갯수감소
+    #     if ProductLike.objects.filter(user=user).exists():
+    #
+    #         product.product_interested_count -= 1
+    #
+    #         ProductLike.objects.filter(user=user).delete()
+    #
+    #         product.save()
+    #
+    #     # 좋아요 기록이 없으면 좋아요 만들고 DB 에서 좋아요 갯수 증가
+    #     else:
+    #         ProductLike.objects.create(
+    #             user=user,
+    #             product=product,
+    #         )
+    #
+    #         product.product_interested_count += 1
+    #
+    #         product.save()
+    #
+    #     serializer = self.get_serializer_class()(product)
+    #
+    #     return Response(serializer.data)

@@ -79,6 +79,10 @@ class ProductLike(models.Model):
         return f'{self.product}'
 
     @property
+    def product_interested_count(self):
+        return f'{self.product.product_interested_count}'
+
+    @property
     def user_name(self):
         return f'{self.user}'
 

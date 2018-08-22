@@ -73,8 +73,20 @@ class FundingOrderSerializer(serializers.ModelSerializer):
         )
 
 
+class ProductFundingOrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+
+        fields = (
+            'product_name',
+            'product_type',
+            'product_company_name',
+            'product_is_funding',
+        )
+
+
 class FundingSerializer(serializers.ModelSerializer):
-    reward = RewardSerializer()
+    product = ProductFundingOrderSerializer()
     order = FundingOrderSerializer()
 
     class Meta:
@@ -82,7 +94,7 @@ class FundingSerializer(serializers.ModelSerializer):
 
         fields = (
             'pk',
-            'reward',
+            'product',
             'order',
             'reward_amount'
         )

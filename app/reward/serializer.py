@@ -117,6 +117,7 @@ class ProductFundingSerializer(RewardSerializer):
         fields = (
             'pk',
             'product_name',
+            'product_end_time',
             'rewards',
         )
 
@@ -147,6 +148,9 @@ class FundingOrderCreateSerializer(serializers.ModelSerializer):
         print('리워드 pk : ', validated_data['reward'].pk)
 
         reward = validated_data['reward'].pk
+
+        print(reward.reward_sold_count)
+        print(reward.reward_total_count)
 
         if reward.reward_total_count > reward.reward_sold_count:
             order = Funding.objects.create(

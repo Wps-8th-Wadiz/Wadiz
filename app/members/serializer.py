@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import make_password
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
@@ -8,7 +9,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
 
 from .token import account_activation_token
-from reward.serializer import FundingSerializer
+from reward.serializer import FundingSerializer, ProductLikeSerializer
 
 User = get_user_model()
 
@@ -16,11 +17,12 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     username = serializers.EmailField(
         validators=[UniqueValidator(queryset=User.objects.all())])
-    password = serializers.SlugField(
+    password = serializers.CharField(
         max_length=12, min_length=1, allow_blank=False, write_only=True)
     nickname = serializers.CharField(
         max_length=20, validators=[UniqueValidator(queryset=User.objects.all())])
     funding_set = FundingSerializer(many=True)
+    like_products = ProductLikeSerializer(many=True)
 
     class Meta:
         model = User
@@ -31,13 +33,14 @@ class UserSerializer(serializers.ModelSerializer):
             'password',
             'nickname',
             'img_profile',
+            'like_products',
             'funding_set'
         )
 
     def validate_password(self, value):
-        if value == self.initial_data.get('password1'):
+        if value == self.initial_data.get('check_password'):
             return value
-        raise ValidationError('(password, password1) 불일치')
+        raise ValidationError('(password, check_password) 불일치')
 
     def create(self, validated_data):
         user = User.objects.create_user(
@@ -66,8 +69,8 @@ class UserSerializer(serializers.ModelSerializer):
 class UserChangeInfoSerializer(serializers.ModelSerializer):
     username = serializers.EmailField(
         validators=[UniqueValidator(queryset=User.objects.all())])
-    password = serializers.SlugField(
-        max_length=12, min_length=1, allow_blank=False, write_only=True)
+    password = serializers.CharField(
+        max_length=12, min_length=1, write_only=True)
     nickname = serializers.CharField(
         max_length=20, validators=[UniqueValidator(queryset=User.objects.all())])
 
@@ -81,10 +84,18 @@ class UserChangeInfoSerializer(serializers.ModelSerializer):
             'img_profile',
         )
 
-    def validate_password(self, value):
-        if value == self.initial_data.get('password1'):
-            return value
-        raise ValidationError('(password, password1) 불일치')
+    # def validate_password(self, value):
+    #     if self.instance.check_password(value):
+    #         return value
+    #     raise ValidationError('password 가 틀렸습니다')
+
+    def validate(self, data):
+        if self.instance.check_password(self.initial_data.get('password')):
+            if self.initial_data.get('new_password') == self.initial_data.get('check_password'):
+                data['password'] = make_password(self.initial_data.get('new_password'))
+                return data
+            raise ValidationError('(new_password, check_password) 불일치')
+        raise ValidationError('password 가 틀렸습니다')
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
@@ -95,3 +106,17 @@ class UserDetailSerializer(serializers.ModelSerializer):
             'nickname',
             'img_profile',
         )
+
+
+class UserDeleteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'password',
+        )
+
+    def validate_password(self, value):
+        if self.instance.check_password(value):
+            value
+            return value
+        raise ValidationError('password 가 틀렸습니다')

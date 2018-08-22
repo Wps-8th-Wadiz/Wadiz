@@ -143,14 +143,10 @@ class FundingOrderCreateSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
-        print(validated_data)
+        reward = Reward.objects.get(pk=validated_data['reward'].pk)
 
-        print('리워드 pk : ', validated_data['reward'].pk)
-
-        reward = validated_data['reward'].pk
-
-        print(reward.reward_sold_count)
-        print(reward.reward_total_count)
+        print('리워드 판매 카운트 :', reward.reward_sold_count)
+        print('리워드 토탈 카운트 :', reward.reward_total_count)
 
         if reward.reward_total_count > reward.reward_sold_count:
             order = Funding.objects.create(

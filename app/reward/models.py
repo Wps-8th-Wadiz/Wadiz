@@ -76,15 +76,47 @@ class ProductLike(models.Model):
 
     @property
     def product_name(self):
-        return f'{self.product}'
+        return f'{self.product.product_name}'
+
+    @property
+    def product_type(self):
+        return f'{self.product.product_type}'
+
+    @property
+    def product_company_name(self):
+        return f'{self.product.product_company_name}'
+
+    @property
+    def product_img(self):
+        return f'{self.product.product_img}'
+
+    @property
+    def product_start_time(self):
+        return f'{self.product.product_start_time}'
+
+    @property
+    def product_end_time(self):
+        return f'{self.product.product_end_time}'
 
     @property
     def product_interested_count(self):
         return f'{self.product.product_interested_count}'
 
     @property
+    def product_is_funding(self):
+        return f'{self.product.product_is_funding}'
+
+    @property
+    def product_cur_amount(self):
+        return f'{self.product.product_cur_amount}'
+
+    @property
+    def product_total_amount(self):
+        return f'{self.product.product_total_amount}'
+
+    @property
     def user_name(self):
-        return f'{self.user}'
+        return f'{self.user.username}'
 
 
 class Reward(models.Model):

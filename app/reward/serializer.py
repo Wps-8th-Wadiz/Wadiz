@@ -47,6 +47,9 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ProductLikeSerializer(serializers.ModelSerializer):
+
+    # product = ProductSerializer()
+
     class Meta:
         model = ProductLike
 
@@ -54,6 +57,16 @@ class ProductLikeSerializer(serializers.ModelSerializer):
             'pk',
             'user',
             'product',
+            'product_name',
+            'product_type',
+            'product_company_name',
+            'product_img',
+            'product_interested_count',
+            'product_start_time',
+            'product_end_time',
+            'product_cur_amount',
+            'product_total_amount',
+            'product_is_funding',
             'liked_at'
         )
 

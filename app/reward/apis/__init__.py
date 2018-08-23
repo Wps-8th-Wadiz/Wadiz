@@ -116,7 +116,7 @@ class ProductLikeDelete(generics.DestroyAPIView):
         return self.destroy(request, *args, **kwargs)
 
 
-class ProductLikeCreate(generics.CreateAPIView):
+class ProductLikeCreate(generics.CreateAPIView, generics.ListAPIView):
     queryset = ProductLike.objects.all()
     serializer_class = ProductLikeSerializer
 
@@ -131,16 +131,13 @@ class ProductLikeCreate(generics.CreateAPIView):
 
 
 class FundingUpdate(generics.UpdateAPIView):
-
     queryset = FundingOrder.objects.all()
     serializer_class = FundingUpdateSerializer
 
     def patch(self, request, *args, **kwargs):
-
         # order 의 Pk 로 order 인스턴스를 얻는다.
 
         return self.partial_update(request, *args, **kwargs)
-
 
     # def get_serializer_class(self):
     #     serializer_class = self.serializer_class

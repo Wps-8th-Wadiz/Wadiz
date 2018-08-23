@@ -110,6 +110,10 @@ class ProductLikeDelete(generics.DestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
 
+        product = Product.objects.get(pk=self.kwargs['pk'])
+
+        product.product_interested_count -= 1
+
         return self.destroy(request, *args, **kwargs)
 
     # def post(self, request, pk, format=None):

@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from ..models import Product, Reward, ProductLike, Funding, FundingOrder
 from ..serializer import ProductSerializer, RewardSerializer, ProductDetailSerializer, ProductFundingSerializer, \
     ProductLikeSerializer, FundingSerializer, ProductLikeCreateSerializer, FundingCreateSerializer, \
-    FundingOrderCreateSerializer, FundingUpdateSerializer
+    FundingOrderCreateSerializer, FundingUpdateSerializer, ProductLikeDeleteSerializer
 from utils.paginations import ProductListPagination
 
 User = get_user_model()
@@ -97,22 +97,18 @@ class FundingOrderCreate(generics.ListCreateAPIView):
     serializer_class = FundingOrderCreateSerializer
 
 
-# class ProductLikeCreate(generics.ListCreateAPIView):
-#     queryset = Product.objects.all()
-#     pagination_class = ProductListPagination
-#     serializer_class = ProductLikeCreateSerializer
-
-
 class ProductLikeDelete(generics.DestroyAPIView):
     queryset = ProductLike.objects.all()
-    serializer_class = ProductLikeSerializer
+    serializer_class = ProductLikeDeleteSerializer
 
     def delete(self, request, *args, **kwargs):
-        product = Product.objects.get(pk=self.request.data['product'])
+
+        # print('요청pk:', self.kwargs)
+
+        product = Product.objects.get(pk=self.kwargs['pk'])
 
         product.product_interested_count -= 1
         print(f'{product.pk}가 삭제되었습니다.')
-        # print(self.request.data['product'])
         return self.destroy(request, *args, **kwargs)
 
 

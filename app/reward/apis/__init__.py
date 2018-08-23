@@ -49,6 +49,13 @@ class FundingList(generics.ListAPIView):
     queryset = Funding.objects.all()
     serializer_class = FundingSerializer
 
+    # def get_queryset(self):
+    #     user = self.request.user
+    #
+    #     print(user)
+    #
+    #     return Funding.objects.filter(user=user)
+
 
 # 펀딩 페이지에서 불필요한 리워드 정보를 배제하고 펀딩에 필요한 리워드 정보 요청한다.
 class ProductFundingList(generics.RetrieveAPIView):
@@ -103,17 +110,31 @@ class ProductLikeDelete(generics.DestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
 
-        # print('요청pk:', self.kwargs)
-
-        product = Product.objects.get(pk=self.kwargs['pk'])
-
-        product.product_interested_count -= 1
-        print(f'{product.pk}가 삭제되었습니다.')
         return self.destroy(request, *args, **kwargs)
+
+    # def post(self, request, pk, format=None):
+    #
+    #     product = Product.objects.get(pk=pk)
+    #
+    #     user = request.user
+    #
+    #     if ProductLike.objects.filter(product=product, user=user).exists():
+    #
+    #         product.product_interested_count -= 1
+    #
+    #         product.delete()
+    #
+    #     else:
+    #         ProductLike.objects.create(
+    #             user=user,
+    #             product=product,
+    #         )
+    #         product.product_interested_count += 1
 
 
 class ProductLikeCreate(generics.CreateAPIView, generics.ListAPIView):
     queryset = ProductLike.objects.all()
+
     serializer_class = ProductLikeSerializer
 
     def post(self, request, *args, **kwargs):
@@ -124,6 +145,37 @@ class ProductLikeCreate(generics.CreateAPIView, generics.ListAPIView):
         print(f'{product.pk}를 좋아요 했습니다.')
 
         return self.create(request, *args, **kwargs)
+
+# class ProductLikeCreate(APIView):
+#     queryset = ProductLike.objects.all()
+#     serializer_class = ProductLikeSerializer
+#
+#     def post(self, request, pk, format=None):
+#
+#         product = Product.objects.get(pk=pk)
+#
+#         user = request.user
+#
+#         product_like = ProductLike.objects.filter(product=product, user=user)
+#
+#         if product_like.exists():
+#
+#             product.product_interested_count -= 1
+#
+#             product_like.delete()
+#             print('좋아요 해제')
+#
+#         else:
+#             ProductLike.objects.create(
+#                 user=user,
+#                 product=product,
+#             )
+#             product.product_interested_count += 1
+#             print('좋아요 성공')
+#
+#         serializer = self.serializer_class(product_like)
+#
+#         return Response(serializer.data)
 
 
 class FundingUpdate(generics.UpdateAPIView):

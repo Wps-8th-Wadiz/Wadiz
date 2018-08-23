@@ -65,7 +65,7 @@ class ProductLikeSerializer(serializers.ModelSerializer):
             'product_cur_amount',
             'product_total_amount',
             'product_is_funding',
-            'liked_at'
+            'liked_at',
         )
 
 
@@ -75,9 +75,10 @@ class ProductLikeDeleteSerializer(serializers.ModelSerializer):
         model = ProductLike
 
         fields = (
-            'pk',
+            'id',
             'user',
             'product',
+            'liked_at'
         )
 
 

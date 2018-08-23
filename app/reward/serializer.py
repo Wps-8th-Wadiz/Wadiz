@@ -87,6 +87,7 @@ class FundingOrderSerializer(serializers.ModelSerializer):
         model = FundingOrder
 
         fields = (
+            'pk'
             'username',
             'phone_number',
             'address1',

@@ -6,6 +6,10 @@ jupyter_test
 #front 파일
 /front
 
+# deploy test 파일
+deploy2.sh
+requirements.txt
+
 #crwaling
 /app/reward/data
 /app/reward/driver

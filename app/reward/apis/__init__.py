@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from ..models import Product, Reward, ProductLike, Funding, FundingOrder
 from ..serializer import ProductSerializer, RewardSerializer, ProductDetailSerializer, ProductFundingSerializer, \
     ProductLikeSerializer, FundingSerializer, ProductLikeCreateSerializer, FundingCreateSerializer, \
-    FundingOrderCreateSerializer
+    FundingOrderCreateSerializer, FundingUpdateSerializer
 from utils.paginations import ProductListPagination
 
 User = get_user_model()
@@ -128,6 +128,19 @@ class ProductLikeCreate(generics.CreateAPIView):
         print(f'{product.pk}를 좋아요 했습니다.')
 
         return self.create(request, *args, **kwargs)
+
+
+class FundingUpdate(generics.UpdateAPIView):
+
+    queryset = FundingOrder.objects.all()
+    serializer_class = FundingUpdateSerializer
+
+    def patch(self, request, *args, **kwargs):
+
+        # order 의 Pk 로 order 인스턴스를 얻는다.
+
+        return self.partial_update(request, *args, **kwargs)
+
 
     # def get_serializer_class(self):
     #     serializer_class = self.serializer_class

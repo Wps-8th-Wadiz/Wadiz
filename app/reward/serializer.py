@@ -241,3 +241,12 @@ class FundingCreateSerializer(serializers.ModelSerializer):
         print(validated_data)
 
         return funding
+
+
+class FundingUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FundingOrder
+
+        fields = (
+            'cancel_at',
+        )

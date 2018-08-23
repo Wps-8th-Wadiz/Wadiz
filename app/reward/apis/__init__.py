@@ -114,6 +114,8 @@ class ProductLikeDelete(generics.DestroyAPIView):
 
         product.product_interested_count -= 1
 
+        product.save()
+
         return self.destroy(request, *args, **kwargs)
 
     # def post(self, request, pk, format=None):
@@ -145,6 +147,8 @@ class ProductLikeCreate(generics.CreateAPIView, generics.ListAPIView):
         product = Product.objects.get(pk=self.request.data['product'])
 
         product.product_interested_count += 1
+
+        product.save()
 
         print(f'{product.pk}를 좋아요 했습니다.')
 

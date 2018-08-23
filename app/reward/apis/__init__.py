@@ -97,10 +97,10 @@ class FundingOrderCreate(generics.ListCreateAPIView):
     serializer_class = FundingOrderCreateSerializer
 
 
-class ProductLikeCreate(generics.ListCreateAPIView):
-    queryset = Product.objects.all()
-    pagination_class = ProductListPagination
-    serializer_class = ProductLikeCreateSerializer
+# class ProductLikeCreate(generics.ListCreateAPIView):
+#     queryset = Product.objects.all()
+#     pagination_class = ProductListPagination
+#     serializer_class = ProductLikeCreateSerializer
 
 
 class ProductLikeDelete(generics.DestroyAPIView):
@@ -108,13 +108,26 @@ class ProductLikeDelete(generics.DestroyAPIView):
     serializer_class = ProductLikeSerializer
 
     def delete(self, request, *args, **kwargs):
-
         product = Product.objects.get(pk=self.request.data['product'])
 
         product.product_interested_count -= 1
         print(f'{product.pk}가 삭제되었습니다.')
         # print(self.request.data['product'])
         return self.destroy(request, *args, **kwargs)
+
+
+class ProductLikeCreate(generics.CreateAPIView):
+    queryset = ProductLike.objects.all()
+    serializer_class = ProductLikeSerializer
+
+    def post(self, request, *args, **kwargs):
+        product = Product.objects.get(pk=self.request.data['product'])
+
+        product.product_interested_count += 1
+
+        print(f'{product.pk}를 좋아요 했습니다.')
+
+        return self.create(request, *args, **kwargs)
 
     # def get_serializer_class(self):
     #     serializer_class = self.serializer_class

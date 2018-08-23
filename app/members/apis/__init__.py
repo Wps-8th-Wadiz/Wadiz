@@ -40,7 +40,7 @@ class UserDetail(APIView):
 
     def patch(self, request, *args, **kwargs):
         user = User.objects.get(username=request.user)
-        serializer = UserChangeInfoSerializer(user, data=request.data, partial=True)
+        serializer = UserChangeInfoSerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)

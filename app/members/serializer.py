@@ -21,8 +21,8 @@ class UserSerializer(serializers.ModelSerializer):
         max_length=12, min_length=1, allow_blank=False, write_only=True)
     nickname = serializers.CharField(
         max_length=20, validators=[UniqueValidator(queryset=User.objects.all())])
-    funding_set = FundingSerializer(many=True)
-    like_products = ProductLikeSerializer(many=True)
+    funding_set = FundingSerializer(many=True, required=False)
+    like_products = ProductLikeSerializer(many=True, required=False)
 
     class Meta:
         model = User
@@ -68,11 +68,11 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserChangeInfoSerializer(serializers.ModelSerializer):
     username = serializers.EmailField(
-        validators=[UniqueValidator(queryset=User.objects.all())])
+        validators=[UniqueValidator(queryset=User.objects.all())], required=False)
     password = serializers.CharField(
-        max_length=12, min_length=1, write_only=True)
+        required=True, max_length=12, min_length=1, write_only=True)
     nickname = serializers.CharField(
-        max_length=20, validators=[UniqueValidator(queryset=User.objects.all())])
+        max_length=20, validators=[UniqueValidator(queryset=User.objects.all())], required=False)
 
     class Meta:
         model = User
@@ -84,18 +84,20 @@ class UserChangeInfoSerializer(serializers.ModelSerializer):
             'img_profile',
         )
 
-    # def validate_password(self, value):
-    #     if self.instance.check_password(value):
-    #         return value
-    #     raise ValidationError('password 가 틀렸습니다')
+    def validate_password(self, value):
+        if self.instance.check_password(self.initial_data.get('password')):
+            return value
+        raise ValidationError('password 가 틀렸습니다')
 
     def validate(self, data):
-        if self.instance.check_password(self.initial_data.get('password')):
+        if self.initial_data.get('new_password'):
             if self.initial_data.get('new_password') == self.initial_data.get('check_password'):
                 data['password'] = make_password(self.initial_data.get('new_password'))
-                return data
-            raise ValidationError('(new_password, check_password) 불일치')
-        raise ValidationError('password 가 틀렸습니다')
+            else:
+                raise ValidationError('(new_password, check_password) 불일치')
+        else:
+            data['password'] = make_password(self.initial_data.get('password'))
+        return data
 
 
 class UserDetailSerializer(serializers.ModelSerializer):

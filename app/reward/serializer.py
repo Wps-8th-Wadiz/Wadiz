@@ -223,7 +223,7 @@ class FundingOrderCreateSerializer(serializers.ModelSerializer):
         request_amount = validated_data['reward_amount']
 
         try:
-            if remain - request_amount > 0:
+            if remain - request_amount >= 0:
                 order = Funding.objects.create(
                     user=validated_data['user'],
                     reward=validated_data['reward'],

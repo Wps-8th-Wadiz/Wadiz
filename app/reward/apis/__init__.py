@@ -123,24 +123,6 @@ class ProductLikeDelete(generics.DestroyAPIView):
 
         return self.destroy(request, *args, **kwargs)
 
-    # def post(self, request, pk, format=None):
-    #
-    #     product = Product.objects.get(pk=pk)
-    #
-    #     user = request.user
-    #
-    #     if ProductLike.objects.filter(product=product, user=user).exists():
-    #
-    #         product.product_interested_count -= 1
-    #
-    #         product.delete()
-    #
-    #     else:
-    #         ProductLike.objects.create(
-    #             user=user,
-    #             product=product,
-    #         )
-    #         product.product_interested_count += 1
 
 
 class ProductLikeCreate(generics.CreateAPIView, generics.ListAPIView):

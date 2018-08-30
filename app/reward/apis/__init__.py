@@ -109,7 +109,6 @@ class ProductLikeDelete(generics.DestroyAPIView):
     serializer_class = ProductLikeDeleteSerializer
 
     def delete(self, request, *args, **kwargs):
-
         # print(self.kwargs['pk'])
 
         product_like = ProductLike.objects.get(pk=self.kwargs['pk'])
@@ -122,7 +121,6 @@ class ProductLikeDelete(generics.DestroyAPIView):
         # print('지운후:', Product.objects.get(pk=product_like.product.pk).product_interested_count)
 
         return self.destroy(request, *args, **kwargs)
-
 
 
 class ProductLikeCreate(generics.CreateAPIView, generics.ListAPIView):
@@ -140,37 +138,6 @@ class ProductLikeCreate(generics.CreateAPIView, generics.ListAPIView):
         print(f'{product.pk}를 좋아요 했습니다.')
 
         return self.create(request, *args, **kwargs)
-
-# class ProductLikeCreate(APIView):
-#     queryset = ProductLike.objects.all()
-#     serializer_class = ProductLikeSerializer
-#
-#     def post(self, request, pk, format=None):
-#
-#         product = Product.objects.get(pk=pk)
-#
-#         user = request.user
-#
-#         product_like = ProductLike.objects.filter(product=product, user=user)
-#
-#         if product_like.exists():
-#
-#             product.product_interested_count -= 1
-#
-#             product_like.delete()
-#             print('좋아요 해제')
-#
-#         else:
-#             ProductLike.objects.create(
-#                 user=user,
-#                 product=product,
-#             )
-#             product.product_interested_count += 1
-#             print('좋아요 성공')
-#
-#         serializer = self.serializer_class(product_like)
-#
-#         return Response(serializer.data)
 
 
 class FundingUpdate(generics.UpdateAPIView):

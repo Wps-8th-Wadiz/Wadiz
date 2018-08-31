@@ -49,13 +49,6 @@ class FundingList(generics.ListAPIView):
     queryset = Funding.objects.all()
     serializer_class = FundingSerializer
 
-    # def get_queryset(self):
-    #     user = self.request.user
-    #
-    #     print(user)
-    #
-    #     return Funding.objects.filter(user=user)
-
 
 # 펀딩 페이지에서 불필요한 리워드 정보를 배제하고 펀딩에 필요한 리워드 정보 요청한다.
 class ProductFundingList(generics.RetrieveAPIView):

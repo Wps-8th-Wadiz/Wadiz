@@ -111,8 +111,6 @@ class ProductLikeDelete(generics.DestroyAPIView):
         product_like.product.product_interested_count -= 1
         product_like.product.save()
 
-        # print('지운후:', Product.objects.get(pk=product_like.product.pk).product_interested_count)
-
         return self.destroy(request, *args, **kwargs)
 
 

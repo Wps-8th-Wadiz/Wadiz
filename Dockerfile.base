@@ -19,6 +19,8 @@ RUN             pip install -r /srv/requirements.txt
 #################### multi deploy 버전 #############################
 #FROM            python:3.6.5-slim
 #
+#MAINTAINER      lockstom2@gmail.com
+#
 #RUN             apt -y update && apt -y dist-upgrade
 #RUN             apt -y install build-essential
 #RUN             apt -y install nginx supervisor
@@ -31,7 +33,7 @@ RUN             pip install -r /srv/requirements.txt
 #RUN             apt-get -y install nginx supervisor nodejs
 #
 ## Backend 및 Frontend의 패키지들을 미리 install
-#RUN             pipenv lock --requirements > requirements.txt
+##RUN             pipenv lock --requirements > requirements.txt
 #COPY            ./requirements.txt              /srv/requirements.txt
 #RUN             mkdir /srv/front
 #COPY            ./front/fds10-wadiz/package.json            /srv/front/package.json
@@ -42,5 +44,7 @@ RUN             pip install -r /srv/requirements.txt
 #RUN             rm -rf ./requirements.txt
 #WORKDIR         /srv/front
 #RUN             npm install -g @angular/cli
+#
+#WORKDIR         /srv/project/front/fds10-wadiz
 #RUN             npm install
 

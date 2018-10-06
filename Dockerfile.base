@@ -27,6 +27,7 @@ RUN             pip install -r /srv/requirements.txt
 #
 ## Node.js설치 위한 패키지
 #RUN             apt-get -y install curl gnupg procps
+# wget
 #RUN             curl -sL https://deb.nodesource.com/setup_8.x | bash -
 #
 ## Nginx, supervisor, Node.js설치

@@ -50,7 +50,7 @@ def build_base():
         # pipenv lock 으로 requirement.txt 생성
         subprocess.call('pipenv lock --requirements > requirements.txt', shell=True)
         # Docker build
-        subprocess.call('docker build -t eb-docker:base -f Dockerfile.base .', shell=True)
+        subprocess.call('docker build -t wadiz:base -f Dockerfile.base .', shell=True)
     finally:
         # 끝난 후 requirements 삭제
         os.remove('requirements.txt')
@@ -61,7 +61,7 @@ def build_local():
         # pipenv lock 으로 requirements.txt 생성
         subprocess.call('pipenv lock --requirements > requirements.txt', shell=True)
         # docker build
-        subprocess.call('docker build -t eb-docker:local -f Dockerfile.local .', shell=True)
+        subprocess.call('docker build -t wadiz:local -f Dockerfile.local .', shell=True)
     finally:
         # 끝난 후 requirements.txt 파일 삭제
         os.remove('requirements.txt')
@@ -72,7 +72,8 @@ def build_dev():
         # pipenv lock 으로 requirements.txt 생성
         subprocess.call('pipenv lock --requirements --dev > requirements.txt', shell=True)
         # docker build
-        subprocess.call('docker build -t eb-docker:dev -f Dockerfile.dev .', shell=True)
+        subprocess.call('docker build -t wadiz:dev -f Dockerfile.dev .', shell=True)
+        # subprocess.call('docker build -t eb-docker:dev -f Dockerfile.dev .', shell=True)
     finally:
         # 끝난 후 requirements.txt 파일 삭제
         os.remove('requirements.txt')
@@ -83,7 +84,7 @@ def build_production():
         # pipenv lock 으로 requirements.txt 생성
         subprocess.call('pipenv lock --requirements > requirements.txt', shell=True)
         # docker build
-        subprocess.call('docker build -t eb-docker:production -f Dockerfile.production .', shell=True)
+        subprocess.call('docker build -t wadiz:production -f Dockerfile.production .', shell=True)
     finally:
         # 끝난 후 requirements.txt 파일 삭제
         os.remove('requirements.txt')

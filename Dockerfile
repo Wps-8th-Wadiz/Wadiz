@@ -1,42 +1,5 @@
 # 현재 버전
-FROM            ryanden/fc-8th-eb-docker:base
-
-MAINTAINER      lockstom2@gmail.com
-
-ENV             PROJECT_DIR             /srv/project
-ENV             BUILD_MODE              production
-ENV             DJANGO_SETTINGS_MODULE  config.settings.${BUILD_MODE}
-
-COPY            .   ${PROJECT_DIR}
-RUN             mkdir   /var/log/django
-
-# Nginx 설정파일들 복사 미 enabled로 링크
-                # avaiable에 있는 파일 복사
-RUN             cp -f   ${PROJECT_DIR}/.config/${BUILD_MODE}/nginx.conf \
-                        /etc/nginx/nginx.conf &&\
-
-                # avaiable 에 nginx_app.conf 파일 복사
-                cp -f   ${PROJECT_DIR}/.config/${BUILD_MODE}/nginx_app.conf \
-                        /etc/nginx/sites-available/ && \
-                # 이미 sites-enabled 에 있던 모든 내용 삭제
-#                rm -f   /etc/nginx/sites-enabled/* &&\
-
-                # 링크 연결
-                ln -sf  /etc/nginx/sites-available/nginx_app.conf \
-                    /etc/nginx/sites-enabled
-
-# supervisor 설정 복사
-RUN             cp -f   ${PROJECT_DIR}/.config/${BUILD_MODE}/supervisor_app.conf \
-                    /etc/supervisor/conf.d/
-
-# 7000번 포트 open
-EXPOSE          7000
-
-# Run supervisord
-CMD             supervisord -n
-
-#################### multi deploy 버전 #############################
-#FROM            ryanden/multi-deploy
+#FROM            ryanden/fc-8th-eb-docker:base
 #
 #MAINTAINER      lockstom2@gmail.com
 #
@@ -71,3 +34,40 @@ CMD             supervisord -n
 #
 ## Run supervisord
 #CMD             supervisord -n
+
+#################### multi deploy 버전 #############################
+FROM            ryanden/wadiz
+
+MAINTAINER      lockstom2@gmail.com
+
+ENV             PROJECT_DIR             /srv/project
+ENV             BUILD_MODE              production
+ENV             DJANGO_SETTINGS_MODULE  config.settings.${BUILD_MODE}
+
+COPY            .   ${PROJECT_DIR}
+RUN             mkdir   /var/log/django
+
+# Nginx 설정파일들 복사 미 enabled로 링크
+                # avaiable에 있는 파일 복사
+RUN             cp -f   ${PROJECT_DIR}/.config/${BUILD_MODE}/nginx.conf \
+                        /etc/nginx/nginx.conf &&\
+
+                # avaiable 에 nginx_app.conf 파일 복사
+                cp -f   ${PROJECT_DIR}/.config/${BUILD_MODE}/nginx_app.conf \
+                        /etc/nginx/sites-available/ && \
+                # 이미 sites-enabled 에 있던 모든 내용 삭제
+                rm -f   /etc/nginx/sites-enabled/* &&\
+
+                # 링크 연결
+                ln -sf  /etc/nginx/sites-available/nginx_app.conf \
+                        /etc/nginx/sites-enabled
+
+# supervisor 설정 복사
+RUN             cp -f   ${PROJECT_DIR}/.config/${BUILD_MODE}/supervisor_app.conf \
+                    /etc/supervisor/conf.d/
+
+# 7000번 포트 open
+EXPOSE          7000
+
+# Run supervisord
+CMD             supervisord -n

@@ -3,10 +3,10 @@
 # utils
 jupyter_test
 
-#front 파일
+#front file
 /front
 
-# deploy test 파일
+# deploy test file
 deploy2.sh
 requirements.txt
 

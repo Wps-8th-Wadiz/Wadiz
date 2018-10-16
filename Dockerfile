@@ -1,4 +1,4 @@
-FROM            ryanden/sample
+FROM            ryanden/wadiz
 
 MAINTAINER      lockstom2@gmail.com
 

@@ -12,8 +12,7 @@ ALLOWED_HOSTS = secrets['ALLOWED_HOSTS']
 if RUNSERVER:
     DEBUG = True
     ALLOWED_HOSTS = [
-        'localhost',
-        '127.0.0.1',
+        'api.localhost'
     ]
 
 # WSGI

@@ -4,6 +4,12 @@ secrets = json.load(open(os.path.join(SECRETS_DIR, 'dev.json')))
 
 DEBUG = True
 
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'api.localhost',
+]
+
 # django storages settings
 INSTALLED_APPS += [
     'storages',

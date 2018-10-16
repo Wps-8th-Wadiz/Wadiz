@@ -34,7 +34,7 @@
 
 ##### multi deploy 개선버전
 
-FROM            sample:base
+FROM            wadiz:base
 MAINTAINER      lockstom2@gmail.com
 ENV             PROJECT_DIR             /srv/project
 ENV             BUILD_MODE              production

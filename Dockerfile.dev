@@ -43,6 +43,10 @@ ENV             PROJECT_DIR             /srv/project
 ENV             BUILD_MODE              dev
 ENV             DJANGO_SETTINGS_MODULE  config.settings.${BUILD_MODE}
 
+# dev용 requirements설치
+COPY            ./requirements.txt  /srv/
+RUN             pip install -r /srv/requirements.txt
+
 COPY            .   ${PROJECT_DIR}
 RUN             mkdir   /var/log/django
 

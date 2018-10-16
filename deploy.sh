@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# .secrets와 requirements를 staging area에 추가
-git add -A
+# .secrets와 staging area에 추가
 git add -f .secrets
 
 # eb deploy실행

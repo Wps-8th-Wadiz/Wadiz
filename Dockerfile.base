@@ -14,43 +14,6 @@
 #COPY            ./requirements.txt  /srv/
 #RUN             pip install -r /srv/requirements.txt
 
-
-
-#################### multi deploy 버전 #############################
-#FROM            python:3.6.5-slim
-#
-#MAINTAINER      lockstom2@gmail.com
-#
-# uwsgi는 pipfile에 기록
-#RUN             apt -y update && apt -y dist-upgrade
-#RUN             apt -y install build-essential
-#RUN             apt -y install nginx supervisor
-#
-## Node.js설치 위한 패키지
-#RUN             apt-get -y install curl gnupg procps
-# wget
-# curl 404 에러로 인한 wget 대체
-#RUN             curl -sL https://deb.nodesource.com/setup_8.x | bash -
-#
-## Nginx, supervisor, Node.js설치
-#RUN             apt-get -y install nginx supervisor nodejs
-#
-## Backend 및 Frontend의 패키지들을 미리 install
-##RUN             pipenv lock --requirements > requirements.txt
-#COPY            ./requirements.txt              /srv/requirements.txt
-#RUN             mkdir /srv/front
-#COPY            ./front/fds10-wadiz/package.json            /srv/front/package.json
-#COPY            ./front/fds10-wadiz/package-lock.json       /srv/front/package-lock.json
-## pipenv lock --requirements > requirements.txt 으로 생성
-#RUN             pip install -r /srv/requirements.txt
-## requirements 파일 삭제
-#RUN             rm -rf ./requirements.txt
-#WORKDIR         /srv/front
-#RUN             npm install -g @angular/cli
-#
-#WORKDIR         /srv/project/front/fds10-wadiz
-#RUN             npm install
-
 ##### multi deploy 개선버전
 FROM            python:3.6.5-slim
 
@@ -67,8 +30,8 @@ RUN             bash setup_8.x
 RUN             apt -y update
 RUN             apt -y install nginx supervisor nodejs
 
-# 로컬의 requirement.txt 파이을 /srv 에 복사 후 pip install 실행
-# (build 하는 한경에 requirements.txt 가 있어야 함)
+# 로컬의 requirement.txt 파알을 /srv 에 복사 후 pip install 실행
+# (build 하는 환경에 requirements.txt 가 있어야 함)
 COPY            ./requirements.txt  /srv/
 RUN             pip install -r /srv/requirements.txt
 
